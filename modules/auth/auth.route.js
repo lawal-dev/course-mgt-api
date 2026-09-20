@@ -1,4 +1,17 @@
-import express from "express"
-const router = express.Router()
+import express from "express";
+import {
+  loginController,
+  logoutController,
+  meController,
+  registerController,
+} from "./auth.controller.js";
+import { registerSchema } from "../../schema/schema.js";
+import { validate } from "../../middlewares/validate.js";
+const router = express.Router();
 
-export default router
+router.post("/register", validate(registerSchema), registerController);
+router.post("/login", loginController);
+router.post("logout", logoutController);
+router.get("me", meController);
+
+export default router;

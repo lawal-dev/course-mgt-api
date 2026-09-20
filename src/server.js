@@ -1,8 +1,8 @@
-import { config } from "dotenv";
+import { configs } from "../config/config.js";
 import app from "./app.js";
 
-const PORT = config.PORT;
+const PORT = configs.port;
 
 app.listen(PORT, () => {
-  console.log("Server listen on PORT 5000");
+  console.log(`Server listen on PORT ${PORT}`);
 });
