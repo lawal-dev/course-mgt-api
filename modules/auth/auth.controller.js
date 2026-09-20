@@ -1,5 +1,5 @@
-import { success } from "zod";
-import { me, register } from "./auth.service.js";
+import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
+import { login, me, register } from "./auth.service.js";
 
 export const registerController = async (req, res, next) => {
   try {
@@ -17,7 +17,7 @@ export const registerController = async (req, res, next) => {
 export const loginController = async (req, res, next) => {
   try {
     const result = await login(req.body);
-    res.cookie("refreshToken", login.refreshToken, {
+    res.cookie("refreshToken", result.refreshToken, {
       httpOnly: false,
       secure: false,
       sameSite: "none",
@@ -57,6 +57,27 @@ export const meController = async (req, res, next) => {
       success: true,
       message: "User retrieved successfully",
       data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const refreshTokenController = (req, res, next) => {
+  try {
+    const newAccessToken = generateAccessToken(req.user);
+    const newRefreshToken = generateRefreshToken(req.user);
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: false,
+      secure: false,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Access token refreshed successfully",
+      accessToken: newAccessToken,
     });
   } catch (error) {
     next(error);
