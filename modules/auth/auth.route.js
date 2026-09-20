@@ -5,8 +5,9 @@ import {
   meController,
   refreshTokenController,
   registerController,
+  updateMeController,
 } from "./auth.controller.js";
-import { loginSchema, registerSchema } from "../../schema/schema.js";
+import { loginSchema, registerSchema, updateUserSchema } from "../../schema/schema.js";
 import { validate } from "../../middlewares/validate.js";
 import { authenticate } from "../../middlewares/authenticate.js";
 import { verifyRefreshAuthenticate } from "../../middlewares/verifyRefreshToken.js";
@@ -17,5 +18,11 @@ router.post("/login", validate(loginSchema, "body"), loginController);
 router.post("logout", logoutController);
 router.get("/me", authenticate, meController);
 router.post("/refresh", verifyRefreshAuthenticate, refreshTokenController);
+router.patch(
+  "/me",
+  authenticate,
+  validate(updateUserSchema, "body"),
+  updateMeController,
+);
 
 export default router;

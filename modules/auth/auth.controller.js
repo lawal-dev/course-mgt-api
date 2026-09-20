@@ -1,5 +1,6 @@
+import { success } from "zod";
 import { generateAccessToken, generateRefreshToken } from "../../utils/jwt.js";
-import { login, me, register } from "./auth.service.js";
+import { login, me, register, updateMe } from "./auth.service.js";
 
 export const registerController = async (req, res, next) => {
   try {
@@ -78,6 +79,20 @@ export const refreshTokenController = (req, res, next) => {
       success: true,
       message: "Access token refreshed successfully",
       accessToken: newAccessToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateMeController = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const user = await updateMe(req.body, userId);
+    res.status(200).json({
+      success: true,
+      message: "Succesfully updated",
+      data: user,
     });
   } catch (error) {
     next(error);

@@ -1,4 +1,4 @@
-import { roles } from "../data/roles.js";
+import { roles } from "../data/permission.js";
 import { AppError } from "../utils/AppError.js";
 
 export const requirePermission = (permission) => {
@@ -12,4 +12,3 @@ export const requirePermission = (permission) => {
     next();
   };
 };
- 

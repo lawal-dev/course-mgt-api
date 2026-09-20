@@ -1,12 +1,12 @@
-import { success } from "zod";
+import { deleteUser, updateUser, user, users } from "./user.service.js";
 
 export const usersController = async (req, res, next) => {
   try {
-    const users = await users();
+    const data = await users();
     res.status(200).json({
       success: true,
       message: "Successfully fetched Users",
-      data: users,
+      data: data,
     });
   } catch (error) {
     next(error);
@@ -15,11 +15,11 @@ export const usersController = async (req, res, next) => {
 
 export const userController = async (req, res, next) => {
   try {
-    const user = await user(req.params.id);
+    const data = await user(req.params.id);
     res.status(200).json({
       success: true,
       message: "Successfully fetched User",
-      data: user,
+      data,
     });
   } catch (error) {
     next(error);

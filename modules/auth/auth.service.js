@@ -4,6 +4,7 @@ import {
   createUser,
   findUserByEmail,
   findUserById,
+  updateUser,
 } from "../users/user.service.js";
 import bcrypt from "bcrypt";
 
@@ -61,4 +62,9 @@ export const me = async (id) => {
   }
 
   return user;
+};
+
+export const updateMe = async (data, id) => {
+  const updatedUser = updateUser(data, id);
+  return updatedUser;
 };

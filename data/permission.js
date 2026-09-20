@@ -1,7 +1,13 @@
 export const roles = {
-  admin: ["users:read", "users:delete", "courses:read", "courses:delete"],
+  ADMIN: [
+    "users:read",
+    "users:delete",
+    "users:update",
+    "courses:read",
+    "courses:delete",
+  ],
 
-  instructor: [
+  INSTRUCTOR: [
     "courses:create",
     "courses:read",
     "courses:update",
@@ -9,7 +15,7 @@ export const roles = {
     "courses:students:read",
   ],
 
-  student: [
+  STUDENT: [
     "courses:read",
     "enrollments:create",
     "enrollments:delete",
