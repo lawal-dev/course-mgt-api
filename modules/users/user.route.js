@@ -15,7 +15,7 @@ router.get("/", authenticate, requirePermission("users:read"), usersController);
 router.get(
   "/:id",
   authenticate,
-  requirePermission("user:read"),
+  requirePermission("users:read"),
   validate(userIdSchema, "params"),
   userController,
 );
@@ -23,7 +23,7 @@ router.patch(
   "/:id",
   authenticate,
   validate(userIdSchema, "params"),
-  requirePermission("user:update"),
+  requirePermission("users:update"),
   validate(updateUserSchema, "body"),
   updateUserController,
 );

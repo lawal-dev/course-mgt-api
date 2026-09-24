@@ -1,0 +1,57 @@
+import { enroll, getCourseStudents, getMyEnrollments } from "./enrollment.service.js";
+
+export const enrollController = async (req, res, next) => {
+  try {
+    const result = await enroll(req.params.id, req.user.id);
+    res.status(200).json({
+      success: true,
+      message: "Successfully enrolled",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const unenrollController = async (req, res, next) => {
+  try {
+    await unenrollCourse(req.params.id, req.user.id);
+
+    res.status(200).json({
+      success: true,
+      message: "Successfully unenrolled from course",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyEnrollmentsController = async (req, res, next) => {
+  try {
+    const enrollments = await getMyEnrollments(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      enrollments,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const getCourseStudentsController = async (req, res, next) => {
+  try {
+    const students = await getCourseStudents(
+      req.params.id,
+      req.user.id
+    );
+
+    res.status(200).json({
+      success: true,
+      students,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

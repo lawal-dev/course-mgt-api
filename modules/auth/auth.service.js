@@ -18,14 +18,14 @@ export const register = async (result) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await createUser({
+  await createUser({
     name,
     email,
     password: hashedPassword,
     role,
   });
 
-  return user;
+  return { name, email, role };
 };
 
 export const login = async (data) => {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { partial } from "zod/mini";
 
 export const registerSchema = z.object({
   name: z
@@ -47,6 +48,8 @@ export const createCourseSchema = z.object({
 
   published: z.boolean().optional(),
 });
+
+export const updateCourseSchema = createCourseSchema.partial();
 
 export const userIdSchema = z.object({
   id: z.coerce.number().int().positive(),

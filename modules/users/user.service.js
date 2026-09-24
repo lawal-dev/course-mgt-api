@@ -33,7 +33,11 @@ export const findUserById = async (id) => {
 
 export const users = async () => {
   try {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+      omit: {
+        password: true,
+      },
+    });
   } catch (error) {
     throw error;
   }
