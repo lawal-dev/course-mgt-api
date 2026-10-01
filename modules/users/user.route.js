@@ -1,8 +1,9 @@
 import express from "express";
-import { updateUserSchema, userIdSchema } from "../../schema/schema.js";
+import { updateUserRoleSchema, updateUserSchema, userIdSchema } from "../../schema/schema.js";
 import {
   deleteUserController,
   updateUserController,
+  updateUserRoleController,
   userController,
   usersController,
 } from "./user.controller.js";
@@ -34,6 +35,15 @@ router.delete(
   validate(userIdSchema, "params"),
   validate(userIdSchema, "params"),
   deleteUserController,
+);
+
+router.patch(
+  "/:id/role",
+  authenticate,
+  requirePermission("users:update"),
+  validate(userIdSchema, "params"),
+  validate(updateUserRoleSchema, "body"),
+  updateUserRoleController,
 );
 
 export default router;

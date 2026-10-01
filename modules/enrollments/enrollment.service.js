@@ -50,7 +50,6 @@ export const unenroll = async (courseId, userId) => {
   return enrollment;
 };
 
-
 export const getMyEnrollments = async (studentId) => {
   return await prisma.enrollment.findMany({
     where: {
@@ -61,7 +60,6 @@ export const getMyEnrollments = async (studentId) => {
     },
   });
 };
-
 
 export const getCourseStudents = async (courseId, instructorId) => {
   const course = await prisma.course.findUnique({
@@ -75,10 +73,7 @@ export const getCourseStudents = async (courseId, instructorId) => {
   }
 
   if (course.instructorId !== instructorId) {
-    throw new AppError(
-      "You can only view students in your own courses",
-      403
-    );
+    throw new AppError("You can only view students in your own courses", 403);
   }
 
   return await prisma.enrollment.findMany({
@@ -96,4 +91,89 @@ export const getCourseStudents = async (courseId, instructorId) => {
       },
     },
   });
+};
+
+export const getEnrollments = async () => {
+  try {
+    return await prisma.enrollment.findMany({
+      include: {
+        student: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+        course: {
+          select: {
+            id: true,
+            title: true,
+            price: true,
+            published: true,
+          },
+        },
+      },
+      orderBy: {
+        enrolledAt: "desc",
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getEnrollment = async (id) => {
+  try {
+    const enrollment = await prisma.enrollment.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        student: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+        course: {
+          select: {
+            id: true,
+            title: true,
+            price: true,
+            published: true,
+          },
+        },
+      },
+    });
+    return enrollment;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteEnrollment = async (id) => {
+  try {
+    const enrollment = await prisma.enrollment.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!enrollment) {
+      throw new AppError("Enrollment not found", 404);
+    }
+
+    await prisma.enrollment.delete({
+      where: {
+        id: enrollment.id,
+      },
+    });
+
+    return enrollment;
+  } catch (error) {
+    throw error;
+  }
 };

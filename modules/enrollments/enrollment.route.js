@@ -1,7 +1,15 @@
 import express from "express";
 import { authenticate } from "../../middlewares/authenticate.js";
 import { validate } from "../../middlewares/validate.js";
-import { enrollController, getCourseStudentsController, getMyEnrollmentsController, unenrollController } from "./enrollment.controller.js";
+import {
+  deleteEnrollmentController,
+  enrollController,
+  getCourseStudentsController,
+  getEnrollmentController,
+  getEnrollmentsController,
+  getMyEnrollmentsController,
+  unenrollController,
+} from "./enrollment.controller.js";
 import { courseIdSchema } from "../../schema/schema.js";
 import { requirePermission } from "../../middlewares/requirePermission.js";
 const router = express.Router();
@@ -14,28 +22,50 @@ router.post(
   enrollController,
 );
 
-
 router.delete(
-  "/:id/enroll",
+  "/courses/:id/enroll",
   authenticate,
   requirePermission("enrollments:delete"),
   validate(courseIdSchema, "params"),
-  unenrollController
+  unenrollController,
 );
-
 
 router.get(
   "/enrollment/me",
   authenticate,
   requirePermission("enrollments:read"),
-  getMyEnrollmentsController
+  getMyEnrollmentsController,
 );
 
 router.get(
-  "/:id/students",
+  "/courses/:id/students",
   authenticate,
   requirePermission("courses:students:read"),
   validate(courseIdSchema, "params"),
-  getCourseStudentsController
-)
+  getCourseStudentsController,
+);
+
+router.get(
+  "/enrollments",
+  authenticate,
+  requirePermission("users-enrollments:read"),
+  getEnrollmentsController,
+);
+
+router.get(
+  "/enrollments/:id",
+  authenticate,
+  requirePermission("users-enrollments:read"),
+  validate(courseIdSchema, "params"),
+  getEnrollmentController,
+);
+
+router.delete(
+  "/enrollments/:id",
+  authenticate,
+  requirePermission("users-enrollments:delete"),
+  validate(courseIdSchema, "params"),
+  deleteEnrollmentController,
+);
+
 export default router;

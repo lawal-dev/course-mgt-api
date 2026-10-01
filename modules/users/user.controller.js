@@ -1,4 +1,4 @@
-import { deleteUser, updateUser, user, users } from "./user.service.js";
+import { deleteUser, updateUser, updateUserRole, user, users } from "./user.service.js";
 
 export const usersController = async (req, res, next) => {
   try {
@@ -32,6 +32,19 @@ export const updateUserController = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "User Updated Successfully",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUserRoleController = async (req, res, next) => {
+  try {
+    const user = await updateUserRole(req.body, req.params.id);
+    res.status(200).json({
+      success: true,
+      message: "User Role Updated Successfully",
       data: user,
     });
   } catch (error) {

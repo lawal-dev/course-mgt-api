@@ -5,6 +5,8 @@ export const roles = {
     "users:update",
     "courses:read",
     "courses:delete",
+    "users-enrollments:read",
+    "users-enrollments:delete",
   ],
 
   INSTRUCTOR: [

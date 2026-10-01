@@ -58,3 +58,7 @@ export const userIdSchema = z.object({
 export const courseIdSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
+
+export const updateUserRoleSchema = z.object({
+  role: z.enum(["INSTRUCTOR", "STUDENT"]),
+});

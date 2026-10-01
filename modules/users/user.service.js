@@ -92,6 +92,38 @@ export const updateUser = async (data, id) => {
   }
 };
 
+export const updateUserRole = async (data, id) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        role: data.role,
+      },
+      omit: {
+        password: true,
+      },
+    });
+
+    return updatedUser;
+  } catch (error) {
+    if (error.code === "P2025") {
+      throw new AppError("No user found", 404);
+    }
+
+    throw error;
+  }
+};
+
 export const deleteUser = async (id) => {
   try {
     return await prisma.user.delete({

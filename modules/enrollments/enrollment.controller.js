@@ -1,4 +1,11 @@
-import { enroll, getCourseStudents, getMyEnrollments } from "./enrollment.service.js";
+import {
+  enroll,
+  getCourseStudents,
+  getEnrollment,
+  getEnrollments,
+  getMyEnrollments,
+  deleteEnrollment,
+} from "./enrollment.service.js";
 
 export const enrollController = async (req, res, next) => {
   try {
@@ -39,17 +46,49 @@ export const getMyEnrollmentsController = async (req, res, next) => {
   }
 };
 
-
 export const getCourseStudentsController = async (req, res, next) => {
   try {
-    const students = await getCourseStudents(
-      req.params.id,
-      req.user.id
-    );
+    const students = await getCourseStudents(req.params.id, req.user.id);
 
     res.status(200).json({
       success: true,
       students,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getEnrollmentsController = async (req, res, next) => {
+  try {
+    const enrollments = await getEnrollments();
+    res.status(200).json({
+      success: true,
+      data: enrollments,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getEnrollmentController = async (req, res, next) => {
+  try {
+    const enrollment = await getEnrollment(req.params.id);
+    res.status(200).json({
+      success: true,
+      data: enrollment,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteEnrollmentController = async (req, res, next) => {
+  try {
+    await deleteEnrollment(req.params.id);
+    res.status(200).json({
+      success: true,
+      message: "Enrollment deleted successfully",
     });
   } catch (error) {
     next(error);
