@@ -1,6 +1,8 @@
 import { getPagination, getPaginationMeta } from "../../utils/pagination.js";
 import { AppError } from "../../utils/AppError.js";
 import prisma from "../../utils/db.js";
+import { buildSearchFilter } from "../../utils/search.js";
+import { buildOrderBy } from "../../utils/sort.js";
 
 export const createUser = async (data) => {
   return await prisma.user.create({
@@ -35,23 +37,16 @@ export const findUserById = async (id) => {
 export const users = async (page, limit, role, search, sortBy, sortOrder) => {
   try {
     const { skip, take } = getPagination(page, limit);
-    // const where = role ? { role } : {};
+    const searchFilter = buildSearchFilter(search, ["name", "email"]);
     const where = {};
-
     if (role) {
       where.role = role;
     }
-
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
-      ];
+      where.OR = searchFilter.OR;
     }
 
-    const orderBy = {
-      [sortBy]: sortOrder,
-    };
+    const orderBy = buildOrderBy(sortBy, sortOrder);
 
     const [total, users] = await Promise.all([
       prisma.user.count({ where, orderBy }),
