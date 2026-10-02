@@ -9,10 +9,11 @@ import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import morgan from "morgan";
 
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  limit: 5,
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
 });
 
 const app = express();
@@ -23,8 +24,9 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  }),
+}),
 );
+app.use(morgan("dev"));
 app.use(limiter);
 app.use(cookieParser());
 app.use("/auth", authRoutes);
