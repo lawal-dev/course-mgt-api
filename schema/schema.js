@@ -73,4 +73,16 @@ export const userQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(10),
   role: z.enum(["INSTRUCTOR", "STUDENT"]).optional(),
   search: z.string().trim().optional(),
+  sortBy: z
+    .enum(["name", "email", "createdAt", "updatedAt"])
+    .default("createdAt"),
+
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
+export const courseQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
+  search: z.string().trim().optional(),
+  published: z.enum(["true", "false"]).optional(),
 });

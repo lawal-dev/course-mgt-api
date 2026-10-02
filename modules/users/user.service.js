@@ -32,13 +32,29 @@ export const findUserById = async (id) => {
   });
 };
 
-export const users = async (page, limit, role) => {
+export const users = async (page, limit, role, search, sortBy, sortOrder) => {
   try {
     const { skip, take } = getPagination(page, limit);
-    const where = role ? { role } : {};
+    // const where = role ? { role } : {};
+    const where = {};
+
+    if (role) {
+      where.role = role;
+    }
+
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const orderBy = {
+      [sortBy]: sortOrder,
+    };
 
     const [total, users] = await Promise.all([
-      prisma.user.count({ where }),
+      prisma.user.count({ where, orderBy }),
       prisma.user.findMany({
         skip,
         take,
@@ -46,9 +62,7 @@ export const users = async (page, limit, role) => {
         omit: {
           password: true,
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy,
       }),
     ]);
     const pagination = getPaginationMeta(page, limit, total);

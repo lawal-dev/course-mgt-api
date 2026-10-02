@@ -9,8 +9,8 @@ import {
 
 import {
   courseIdSchema,
+  courseQuerySchema,
   createCourseSchema,
-  paginationSchema,
   updateCourseSchema,
 } from "../../schema/schema.js";
 import { validate } from "../../middlewares/validate.js";
@@ -22,7 +22,7 @@ router.get(
   "/",
   authenticate,
   requirePermission("courses:read"),
-  validate(paginationSchema, "query"),
+  validate(courseQuerySchema, "query"),
   getAllCoursesController,
 );
 router.get(

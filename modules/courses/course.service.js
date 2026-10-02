@@ -2,12 +2,26 @@ import { getPagination, getPaginationMeta } from "../../utils/pagination.js";
 import { AppError } from "../../utils/AppError.js";
 import prisma from "../../utils/db.js";
 
-export const getCourses = async (page, limit) => {
+export const getCourses = async (page, limit, search, published) => {
   const { skip, take } = getPagination(page, limit);
+  const where = {};
+
+  if (search) {
+    where.OR = [
+      { title: { contains: search, mode: "insensitive" } },
+      { description: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  if (published) {
+    where.published = published === "true";
+  }
+
   const [total, courses] = await Promise.all([
-    prisma.course.count(),
+    prisma.course.count({ where }),
     prisma.course.findMany({
       skip,
+      where,
       take,
     }),
   ]);

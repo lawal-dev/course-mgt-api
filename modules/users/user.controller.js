@@ -8,8 +8,8 @@ import {
 
 export const usersController = async (req, res, next) => {
   try {
-    const { page, limit, role, search } = req.validatedQuery;
-    const data = await users(page, limit, role, search);
+    const { page, limit, role, search, sortBy, sortOrder } = req.validatedQuery;
+    const data = await users(page, limit, role, search, sortBy, sortOrder);
     res.status(200).json({
       success: true,
       message: "Successfully fetched Users",
