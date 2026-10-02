@@ -1,5 +1,10 @@
 import express from "express";
-import { updateUserRoleSchema, updateUserSchema, userIdSchema } from "../../schema/schema.js";
+import {
+  updateUserRoleSchema,
+  updateUserSchema,
+  userIdSchema,
+  userQuerySchema,
+} from "../../schema/schema.js";
 import {
   deleteUserController,
   updateUserController,
@@ -12,7 +17,13 @@ import { requirePermission } from "../../middlewares/requirePermission.js";
 import { authenticate } from "../../middlewares/authenticate.js";
 const router = express.Router();
 
-router.get("/", authenticate, requirePermission("users:read"), usersController);
+router.get(
+  "/",
+  authenticate,
+  requirePermission("users:read"),
+  validate(userQuerySchema, "query"),
+  usersController,
+);
 router.get(
   "/:id",
   authenticate,

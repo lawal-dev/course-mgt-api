@@ -1,12 +1,20 @@
-import { deleteUser, updateUser, updateUserRole, user, users } from "./user.service.js";
+import {
+  deleteUser,
+  updateUser,
+  updateUserRole,
+  user,
+  users,
+} from "./user.service.js";
 
 export const usersController = async (req, res, next) => {
   try {
-    const data = await users();
+    const { page, limit, role, search } = req.validatedQuery;
+    const data = await users(page, limit, role, search);
     res.status(200).json({
       success: true,
       message: "Successfully fetched Users",
-      data: data,
+      data: data.users,
+      pagination: data.pagination,
     });
   } catch (error) {
     next(error);

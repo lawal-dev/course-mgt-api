@@ -7,6 +7,7 @@ export const roles = {
     "courses:delete",
     "users-enrollments:read",
     "users-enrollments:delete",
+    "stat:read",
   ],
 
   INSTRUCTOR: [

@@ -1,3 +1,4 @@
+import { getPagination, getPaginationMeta } from "../../utils/pagination.js";
 import { AppError } from "../../utils/AppError.js";
 import prisma from "../../utils/db.js";
 import { findCourseById } from "../courses/course.service.js";
@@ -93,31 +94,19 @@ export const getCourseStudents = async (courseId, instructorId) => {
   });
 };
 
-export const getEnrollments = async () => {
+export const getEnrollments = async (page, limit) => {
   try {
-    return await prisma.enrollment.findMany({
-      include: {
-        student: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-          },
-        },
-        course: {
-          select: {
-            id: true,
-            title: true,
-            price: true,
-            published: true,
-          },
-        },
-      },
-      orderBy: {
-        enrolledAt: "desc",
-      },
-    });
+    const { skip, take } = getPagination(page, limit);
+    const [total, enrollments] = await Promise.all([
+      prisma.enrollment.count(),
+      prisma.enrollment.findMany({
+        skip,
+        take,
+      }),
+    ]);
+
+    const pagination = getPaginationMeta(page, limit, total);
+    return { total, enrollments, pagination };
   } catch (error) {
     throw error;
   }

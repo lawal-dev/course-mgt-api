@@ -10,6 +10,7 @@ import {
 import {
   courseIdSchema,
   createCourseSchema,
+  paginationSchema,
   updateCourseSchema,
 } from "../../schema/schema.js";
 import { validate } from "../../middlewares/validate.js";
@@ -17,11 +18,17 @@ import { authenticate } from "../../middlewares/authenticate.js";
 import { requirePermission } from "../../middlewares/requirePermission.js";
 const router = express.Router();
 
-router.get("/", requirePermission("courses:read"), getAllCoursesController);
+router.get(
+  "/",
+  authenticate,
+  requirePermission("courses:read"),
+  validate(paginationSchema, "query"),
+  getAllCoursesController,
+);
 router.get(
   "/:id",
-  validate(courseIdSchema, "params"),
   authenticate,
+  validate(courseIdSchema, "params"),
   requirePermission("courses:read"),
   getCourseController,
 );

@@ -10,7 +10,7 @@ import {
   getMyEnrollmentsController,
   unenrollController,
 } from "./enrollment.controller.js";
-import { courseIdSchema } from "../../schema/schema.js";
+import { courseIdSchema, paginationSchema } from "../../schema/schema.js";
 import { requirePermission } from "../../middlewares/requirePermission.js";
 const router = express.Router();
 
@@ -48,6 +48,7 @@ router.get(
 router.get(
   "/enrollments",
   authenticate,
+  validate(paginationSchema, "query"),
   requirePermission("users-enrollments:read"),
   getEnrollmentsController,
 );

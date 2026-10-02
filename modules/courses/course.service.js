@@ -1,8 +1,19 @@
+import { getPagination, getPaginationMeta } from "../../utils/pagination.js";
 import { AppError } from "../../utils/AppError.js";
 import prisma from "../../utils/db.js";
 
-export const getCourses = async () => {
-  return await prisma.course.findMany();
+export const getCourses = async (page, limit) => {
+  const { skip, take } = getPagination(page, limit);
+  const [total, courses] = await Promise.all([
+    prisma.course.count(),
+    prisma.course.findMany({
+      skip,
+      take,
+    }),
+  ]);
+
+  const pagination = getPaginationMeta(page, limit, total);
+  return { total, courses, pagination };
 };
 
 export const getCourse = async (id) => {

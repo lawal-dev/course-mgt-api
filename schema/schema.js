@@ -62,3 +62,15 @@ export const courseIdSchema = z.object({
 export const updateUserRoleSchema = z.object({
   role: z.enum(["INSTRUCTOR", "STUDENT"]),
 });
+
+export const paginationSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
+});
+
+export const userQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
+  role: z.enum(["INSTRUCTOR", "STUDENT"]).optional(),
+  search: z.string().trim().optional(),
+});

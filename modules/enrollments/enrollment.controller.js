@@ -61,10 +61,12 @@ export const getCourseStudentsController = async (req, res, next) => {
 
 export const getEnrollmentsController = async (req, res, next) => {
   try {
-    const enrollments = await getEnrollments();
+    const { page, limit } = req.validatedQuery;
+    const enrollments = await getEnrollments(page, limit);
     res.status(200).json({
       success: true,
-      data: enrollments,
+      data: enrollments.enrollments,
+      pagination: enrollments.pagination,
     });
   } catch (error) {
     next(error);

@@ -9,7 +9,8 @@ import {
 
 export const getAllCoursesController = async (req, res, next) => {
   try {
-    const courses = await getCourses();
+    const { page, limit } = req.validatedQuery;
+    const courses = await getCourses(page, limit);
     res.status(200).json({
       success: true,
       message: "Successfully",

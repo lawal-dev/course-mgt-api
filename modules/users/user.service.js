@@ -1,3 +1,4 @@
+import { getPagination, getPaginationMeta } from "../../utils/pagination.js";
 import { AppError } from "../../utils/AppError.js";
 import prisma from "../../utils/db.js";
 
@@ -31,13 +32,27 @@ export const findUserById = async (id) => {
   });
 };
 
-export const users = async () => {
+export const users = async (page, limit, role) => {
   try {
-    return await prisma.user.findMany({
-      omit: {
-        password: true,
-      },
-    });
+    const { skip, take } = getPagination(page, limit);
+    const where = role ? { role } : {};
+
+    const [total, users] = await Promise.all([
+      prisma.user.count({ where }),
+      prisma.user.findMany({
+        skip,
+        take,
+        where,
+        omit: {
+          password: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+    ]);
+    const pagination = getPaginationMeta(page, limit, total);
+    return { users, pagination };
   } catch (error) {
     throw error;
   }

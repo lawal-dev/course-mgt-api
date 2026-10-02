@@ -16,7 +16,11 @@ export const validate = (schema, location) => {
       return next(new AppError("Validation failed", 400, errors));
     }
 
-    req[location] = result.data;
+    if (location === "query") {
+      req.validatedQuery = result.data;
+    } else {
+      req[location] = result.data;
+    }
 
     next();
   };
