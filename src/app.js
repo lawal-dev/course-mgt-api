@@ -10,6 +10,8 @@ import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "../config/swagger.js";
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -24,10 +26,11 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-}),
+  }),
 );
 app.use(morgan("dev"));
 app.use(limiter);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cookieParser());
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);

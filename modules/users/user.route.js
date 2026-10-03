@@ -17,6 +17,17 @@ import { requirePermission } from "../../middlewares/requirePermission.js";
 import { authenticate } from "../../middlewares/authenticate.js";
 const router = express.Router();
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     tags:
+ *       - Users
+ *     responses:
+ *       200:
+ *         description: Users retrieved successfully
+ */
 router.get(
   "/",
   authenticate,
