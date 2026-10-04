@@ -1,14 +1,20 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const options = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
+
     info: {
       title: "Course Management API",
       version: "1.0.0",
       description: "API documentation for the Course Management System",
     },
+
     servers: [
       {
         url: "http://localhost:5000",
@@ -17,12 +23,10 @@ const options = {
     ],
   },
 
-  apis: [path.resolve(process.cwd(), "modules/users/users.route.js")],
-
-  failOnErrors: true,
+  apis: [path.join(__dirname, "../modules/**/*.route.js")],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 console.log(JSON.stringify(swaggerSpec, null, 2));
 
