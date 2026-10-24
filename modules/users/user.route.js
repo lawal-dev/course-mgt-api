@@ -22,11 +22,50 @@ const router = express.Router();
  * /users:
  *   get:
  *     summary: Get all users
+ *     description: Retrieve a paginated list of users.
  *     tags:
  *       - Users
+ *
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of users per page
+ *
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search users by name or email
+ *
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *           enum:
+ *             - ADMIN
+ *             - INSTRUCTOR
+ *             - STUDENT
+ *         description: Filter users by role
+ *
  *     responses:
  *       200:
  *         description: Users retrieved successfully
+ *
+ *       401:
+ *         description: Authentication required
+ *
+ *       403:
+ *         description: Insufficient permissions
  */
 router.get(
   "/",

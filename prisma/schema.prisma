@@ -33,7 +33,7 @@ model Course {
   published    Boolean  @default(false)
   instructorId Int
   createdAt    DateTime @default(now())
- updatedAt DateTime @default(now()) @updatedAt
+  updatedAt    DateTime @default(now()) @updatedAt
 
   instructor  User         @relation(fields: [instructorId], references: [id])
   enrollments Enrollment[]
@@ -45,12 +45,23 @@ model Enrollment {
   courseId   Int
   enrolledAt DateTime @default(now())
   createdAt  DateTime @default(now())
- updatedAt DateTime @default(now()) @updatedAt
+  updatedAt  DateTime @default(now()) @updatedAt
 
   student User   @relation(fields: [studentId], references: [id])
   course  Course @relation(fields: [courseId], references: [id])
 
   @@unique([studentId, courseId])
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  age       Int?
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {

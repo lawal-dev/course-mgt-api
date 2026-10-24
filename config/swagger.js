@@ -1,17 +1,10 @@
 import swaggerJSDoc from "swagger-jsdoc";
-import path from "path";
-import { fileURLToPath } from "url";
 import { globSync } from "glob";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const routeFiles = globSync(
-  path.resolve(__dirname, "../modules/**/*.route.js"),
-);
-
-console.log("Swagger route files:");
-console.log(routeFiles);
+const routeFiles = globSync("modules/**/*.route.js", {
+  cwd: process.cwd(),
+  absolute: true,
+});
 
 const swaggerOptions = {
   definition: {
@@ -37,7 +30,5 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
-console.log(JSON.stringify(swaggerSpec, null, 2));
 
 export default swaggerSpec;
